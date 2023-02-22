@@ -1,0 +1,27 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifactName: 'deploy.bicep'
+    downloadPath: '$(Pipeline.Workspace)'
+    runVersion: 'latest'
+  displayName: 'Download Bicep files from GitHub'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(AZURESUBSCRIPTION)
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az bicep build --file $(Pipeline.Workspace)/deploy.bicep
+      az bicep build --file $(Pipeline.Workspace)/function.bicep
+      az deployment group create \
+        --resource-group 'bicepfunctionapp-rg' \
+        --template-file $(Pipeline.Workspace)/myBicepFile.json \
+        --parameters $(Pipeline.Workspace)/myBicepFile.parameters.json
+  displayName: 'Deploy Function App and Functions'
