@@ -5,7 +5,7 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: 'my-subscription'
+  azureSubscription: $(AZURESUBSCRIPTION)
   # Function app names
   functionApp1: 'my-function-app-1'
   functionApp2: 'my-function-app-2'
@@ -30,7 +30,7 @@ stages:
           az functionapp config appsettings set --name $(functionApp3) --resource-group my-resource-group --settings 'MySetting3=Value3'
     - task: AzureFunctionApp@1
       inputs:
-        azureSubscription: $(azureSubscription)
+        azureSubscription: $(AZURESUBSCRIPTION)
         appType: 'functionAppLinux'
         appName: $(functionApp1)
         package: '$(Pipeline.Workspace)/$(functionApp1)/$(Build.BuildId).zip'
@@ -42,7 +42,7 @@ stages:
         package: '$(Pipeline.Workspace)/$(functionApp2)/$(Build.BuildId).zip'
     - task: AzureFunctionApp@1
       inputs:
-        azureSubscription: $(azureSubscription)
+        azureSubscription: $(AZURESUBSCRIPTION)
         appType: 'functionAppLinux'
         appName: $(functionApp3)
         package: '$(Pipeline.Workspace)/$(functionApp3)/$(Build.BuildId).zip'
