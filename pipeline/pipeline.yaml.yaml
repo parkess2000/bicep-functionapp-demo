@@ -6,6 +6,7 @@ trigger:
 variables:
   # Azure Resource Manager connection created during pipeline creation
   azureSubscription: $(AZURESUBSCRIPTION)
+  resource-group-name "bicepfunctionapp-rg"
   # Function app names
   functionApp1: 'my-function-app-1'
   functionApp2: 'my-function-app-2'
@@ -25,9 +26,9 @@ stages:
         azureSubscription: $(azureSubscription)
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az functionapp config appsettings set --name $(functionApp1) --resource-group my-resource-group --settings 'MySetting1=Value1'
-          az functionapp config appsettings set --name $(functionApp2) --resource-group my-resource-group --settings 'MySetting2=Value2'
-          az functionapp config appsettings set --name $(functionApp3) --resource-group my-resource-group --settings 'MySetting3=Value3'
+          az functionapp config appsettings set --name $(functionApp1) --resource-group bicepfunctionapp-rg --settings 'MySetting1=Value1'
+          az functionapp config appsettings set --name $(functionApp2) --resource-group bicepfunctionapp-rg --settings 'MySetting2=Value2'
+          az functionapp config appsettings set --name $(functionApp3) --resource-group bicepfunctionapp-rg --settings 'MySetting3=Value3'
     - task: AzureFunctionApp@1
       inputs:
         azureSubscription: $(AZURESUBSCRIPTION)
